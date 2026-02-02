@@ -1,53 +1,74 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import UserView from '../views/UserView.vue'
-import BookView from '../views/BookView.vue'
-import EditView from '../views/PublisherView.vue'
-import AlugView from '../views/RentalView.vue'
+import Vue from "vue";
+import VueRouter from "vue-router";
+import HomeView from "../views/HomeView.vue";
+import UserView from "../views/UserView.vue";
+import BookView from "../views/BookView.vue";
+import EditView from "../views/PublisherView.vue";
+import AlugView from "../views/RentalView.vue";
+import LoginView from "@/views/LoginView.vue";
+import RegisterView from "@/views/RegisterView.vue";
+import Auth from "@/services/auth";
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/',
-    name: 'home',
-    component: HomeView
+    path: "/",
+    name: "login",
+    component: LoginView,
   },
   {
-    path: '/usuario',
-    name: 'user',
-    component: UserView
+    path: "/registro",
+    name: "register",
+    component: RegisterView,
   },
   {
-    path: '/livro',
-    name: 'book',
-    component: BookView
+    path: "/home",
+    name: "home",
+    component: HomeView,
   },
   {
-    path: '/editora',
-    name: 'edit',
-    component: EditView
+    path: "/usuario",
+    name: "user",
+    component: UserView,
   },
   {
-    path: '/aluguel',
-    name: 'alug',
-    component: AlugView
+    path: "/livro",
+    name: "book",
+    component: BookView,
   },
-  // {
-  //   path: '/about',
-  //   name: 'about',
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  // }
-]
+  {
+    path: "/editora",
+    name: "edit",
+    component: EditView,
+  },
+  {
+    path: "/aluguel",
+    name: "alug",
+    component: AlugView,
+  },
+  {
+    path: "*",
+    redirect: "/home",
+  },
+];
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: "history",
   base: process.env.BASE_URL,
-  routes
-})
+  routes,
+});
 
-export default router
+router.beforeEach((to, from, next) => {
+  const publicPages = ["/", "/registro"];
+
+  if (Auth.isAuthenticated() && publicPages.includes(to.path)) return next("/home");
+
+  const authRequired = !publicPages.includes(to.path);
+
+  if (authRequired && !Auth.isAuthenticated()) return next("/");
+
+  next();
+});
+
+export default router;

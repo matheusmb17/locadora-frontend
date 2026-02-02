@@ -365,6 +365,7 @@ export default {
             rentalDate: this.rentalDate,
             forecastDate: this.forecastDate,
           };
+          console.log(createdRental)
           Rental.create(createdRental)
             .then(() => {
               Swal.fire({
@@ -431,7 +432,7 @@ export default {
     confirmDevol() {
       const returnedRental = {
         id: this.update.id,
-        returnDate: new Date().toISOString().substr(0, 10),
+        returnDate: new Intl.DateTimeFormat('sv-SE').format(new Date()),
       };
       Rental.update(returnedRental)
         .then((response) => {

@@ -1,36 +1,15 @@
 <template>
-  <nav>
-    <v-navigation-drawer
-      temporary
-      absolute
-      dark
-      v-model="isDrawerOpen"
-      class="sidebar"
-    >
+  <nav v-if="$route.name !== 'login' && $route.name !== 'register'">
+    <v-navigation-drawer temporary absolute dark v-model="isDrawerOpen" class="sidebar">
       <v-list>
         <v-list-item>
           <v-layout flex class="header_side">
-            <v-app-bar-nav-icon
-              large
-              @click="isDrawerOpen = !isDrawerOpen"
-              class="menu_icon"
-            ></v-app-bar-nav-icon>
-            <div
-              class="d-flex align-center white--text"
-              style="font-size: 22px"
-            >
-              <v-icon>mdi-bookshelf</v-icon>WDA Livraria
-            </div>
+            <v-app-bar-nav-icon large @click="isDrawerOpen = !isDrawerOpen" class="menu_icon"></v-app-bar-nav-icon>
+            <div class="d-flex align-center white--text" style="font-size: 22px"><v-icon>mdi-bookshelf</v-icon>WDA Livraria</div>
             <div></div>
           </v-layout>
         </v-list-item>
-        <v-list-item
-          flat
-          v-for="link in links"
-          :key="link.text"
-          router
-          :to="link.route"
-        >
+        <v-list-item flat v-for="link in links" :key="link.text" router :to="link.route">
           <v-list-item-icon>
             <v-icon>{{ link.icon }}</v-icon>
           </v-list-item-icon>
@@ -39,14 +18,12 @@
       </v-list>
     </v-navigation-drawer>
     <v-app-bar app dark>
-      <v-app-bar-nav-icon
-        @click="isDrawerOpen = !isDrawerOpen"
-        class="menu_icon"
-      ></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click="isDrawerOpen = !isDrawerOpen" class="menu_icon"></v-app-bar-nav-icon>
       <div class="d-flex align-center">
         <v-btn href="/"><v-icon>mdi-bookshelf</v-icon> WDA LIVRARIA</v-btn>
       </div>
       <v-spacer></v-spacer>
+      <v-btn @click="logout"><v-icon>mdi-logout</v-icon> Sair</v-btn>
     </v-app-bar>
     <v-main>
       <slot></slot>
@@ -54,6 +31,8 @@
   </nav>
 </template>
 <script>
+import Auth from "@/services/auth";
+
 export default {
   data() {
     return {
@@ -65,6 +44,12 @@ export default {
         { icon: "mdi-book-account", text: "Aluguel", route: "/aluguel" },
       ],
     };
+  },
+  methods: {
+    logout() {
+      Auth.logout();
+      location.reload();
+    },
   },
 };
 </script>
