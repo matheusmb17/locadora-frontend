@@ -18,7 +18,7 @@ api.interceptors.response.use(
     return response;
   },
    (error) => {
-    if (error.status == "ERR_NETWORK") {
+    if (error.status == "ERR_NETWORK" || error.status == 401) {
       Auth.logout();
       window.location.href = "/login";
     }
