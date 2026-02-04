@@ -2,7 +2,7 @@ import axios from "axios";
 import Auth from "@/services/auth";
 
 const api = axios.create({
-  baseURL: "https://localhost:7126/api/",
+  baseURL: process.env.VUE_APP_API_BASE_URL,
 });
 
 api.interceptors.request.use((config) => {
